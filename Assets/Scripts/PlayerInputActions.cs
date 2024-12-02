@@ -35,6 +35,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MoveByClick"",
+                    ""type"": ""Value"",
+                    ""id"": ""dea41fb7-a895-4b61-a781-6f7030982bef"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""897a7fff-b56e-4252-b297-347df404c982"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveByClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -101,6 +121,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // PlayerActionMap
         m_PlayerActionMap = asset.FindActionMap("PlayerActionMap", throwIfNotFound: true);
         m_PlayerActionMap_Move = m_PlayerActionMap.FindAction("Move", throwIfNotFound: true);
+        m_PlayerActionMap_MoveByClick = m_PlayerActionMap.FindAction("MoveByClick", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -168,11 +189,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerActionMap;
     private List<IPlayerActionMapActions> m_PlayerActionMapActionsCallbackInterfaces = new List<IPlayerActionMapActions>();
     private readonly InputAction m_PlayerActionMap_Move;
+    private readonly InputAction m_PlayerActionMap_MoveByClick;
     public struct PlayerActionMapActions
     {
         private @PlayerInputActions m_Wrapper;
         public PlayerActionMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_PlayerActionMap_Move;
+        public InputAction @MoveByClick => m_Wrapper.m_PlayerActionMap_MoveByClick;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -185,6 +208,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @MoveByClick.started += instance.OnMoveByClick;
+            @MoveByClick.performed += instance.OnMoveByClick;
+            @MoveByClick.canceled += instance.OnMoveByClick;
         }
 
         private void UnregisterCallbacks(IPlayerActionMapActions instance)
@@ -192,6 +218,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @MoveByClick.started -= instance.OnMoveByClick;
+            @MoveByClick.performed -= instance.OnMoveByClick;
+            @MoveByClick.canceled -= instance.OnMoveByClick;
         }
 
         public void RemoveCallbacks(IPlayerActionMapActions instance)
@@ -212,5 +241,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IPlayerActionMapActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnMoveByClick(InputAction.CallbackContext context);
     }
 }
